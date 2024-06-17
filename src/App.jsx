@@ -7,16 +7,32 @@ import "./App.css";
 import NavBar from "./components/NavBar";
 import Home from "./containers/Home";
 import HotelDetails from "./containers/HotelDetails";
+import Login from "./containers/Login";
+import Layout from "./containers/Layout";
 
 function App() {
   return (
     <>
       <div className="App">
-        <NavBar />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/hotel-details/:id" element={<HotelDetails />}></Route>
+            <Route path="/" element={<Login />}></Route>
+            <Route
+              path="/home"
+              element={
+                <Layout>
+                  <Home />
+                </Layout>
+              }
+            ></Route>
+            <Route
+              path="/hotel-details/:id"
+              element={
+                <Layout>
+                  <HotelDetails />
+                </Layout>
+              }
+            ></Route>
           </Routes>
         </BrowserRouter>
         {/* Layout of the app */}

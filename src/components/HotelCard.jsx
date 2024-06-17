@@ -18,7 +18,7 @@ const HotelCard = ({hotel}) => {
 
   return (
     <>
-      <Card onClick={onCardClick} sx={{maxWidth: 400, marginBottom: "2rem"}}>
+      <Card onClick={onCardClick} sx={{maxWidth: 350, marginBottom: "2rem 1rem"}}>
         <CardActionArea>
           <CardMedia
             component="img"

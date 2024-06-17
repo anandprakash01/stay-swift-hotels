@@ -1,11 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {Container, Grid} from "@mui/material";
+import {useLocation} from "react-router";
+
+import {Container, Grid, Typography} from "@mui/material";
 import axios from "axios";
 
 import HotelCard from "../components/HotelCard";
+// import NavBar from "../components/NavBar";
 
 const Home = () => {
   const [hotels, setHotels] = useState([]);
+  const locationDetails = useLocation();
+  // console.log(locationDetails);
 
   useEffect(() => {
     axios
@@ -28,7 +33,8 @@ const Home = () => {
           mt: "5rem",
         }}
       >
-        <Grid container spacing={3}>
+        <Typography variant="h4">Welcome {locationDetails.state.userName}</Typography>
+        <Grid container spacing={3} justifyContent={"center"}>
           {hotels.map(hotel => {
             return (
               <Grid key={hotel.id} item md={4}>
