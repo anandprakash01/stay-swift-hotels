@@ -1,4 +1,7 @@
 import React, {useState} from "react";
+
+import {useLocation, useNavigate} from "react-router";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,14 +14,27 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-
-const pages = ["Home", "Hotels", "Places"];
-const settings = ["Profile", "Account", "Logout"];
+import {getApp} from "firebase/app";
 
 const NavBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navbarButtonStyle = {
+    color: "white",
+    display: "block",
+    "&:hover": {backgroundColor: "#E7D37F", color: "#365E32"},
+  };
+
+  const loginLogoutButton = {
+    color: "white",
+    textTransform: "capitalize",
+    margin: "0 1rem",
+    "&:hover": {backgroundColor: "#E7D37F", color: "#365E32"},
+  };
+
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const locationDetails = useLocation();
+
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget);
@@ -36,27 +52,32 @@ const NavBar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "#365E32",
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: {xs: "none", md: "flex"},
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "#E7D37F",
               textDecoration: "none",
+              userSelect: "none",
             }}
           >
             Stay Swift
           </Typography>
 
+          {/* menu for small screen */}
           <Box sx={{flexGrow: 1, display: {xs: "flex", md: "none"}}}>
             <IconButton
               size="large"
@@ -86,14 +107,16 @@ const NavBar = () => {
                 display: {xs: "block", md: "none"},
               }}
             >
-              {pages.map(page => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                onClick={handleCloseNavMenu}
+                sx={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}
+              >
+                <Typography>Home</Typography>
+                <Typography>Places</Typography>
+              </MenuItem>
             </Menu>
           </Box>
-          <AdbIcon sx={{display: {xs: "flex", md: "none"}, mr: 1}} />
+
           <Typography
             variant="h5"
             noWrap
@@ -106,26 +129,40 @@ const NavBar = () => {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "#E7D37F",
               textDecoration: "none",
             }}
           >
-            LOGO
+            Stay Swift
           </Typography>
-          <Box sx={{flexGrow: 1, display: {xs: "none", md: "flex"}}}>
-            {pages.map(page => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{my: 2, color: "white", display: "block"}}
-              >
-                {page}
-              </Button>
-            ))}
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: {xs: "none", md: "flex"},
+            }}
+          >
+            <Button
+              onClick={() => {
+                navigate("/");
+              }}
+              sx={navbarButtonStyle}
+            >
+              Home
+            </Button>
+            <Button
+              onClick={() => {
+                navigate("/places");
+              }}
+              sx={navbarButtonStyle}
+            >
+              Places
+            </Button>
           </Box>
 
+          {/* menu for small screen */}
+
           <Box sx={{flexGrow: 0}}>
-            <Tooltip title="Open settings">
+            <Tooltip title={locationDetails.state?.userName}>
               <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                 <Avatar
                   alt="Anand Prakash"
@@ -133,8 +170,21 @@ const NavBar = () => {
                 />
               </IconButton>
             </Tooltip>
+            {locationDetails.state?.userName ? (
+              <Button sx={loginLogoutButton}>Logout</Button>
+            ) : (
+              <Button
+                sx={loginLogoutButton}
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Login
+              </Button>
+            )}
+
             <Menu
-              sx={{mt: "45px"}}
+              sx={{mt: "45px", minHeight: "6rem"}}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -149,11 +199,34 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                onClick={handleCloseUserMenu}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  padding: "3px 10px",
+                }}
+              >
+                <Typography
+                  onClick={() => {
+                    navigate("/account");
+                  }}
+                >
+                  Account
+                </Typography>
+                {locationDetails.state?.userName ? (
+                  <Typography>Logout</Typography>
+                ) : (
+                  <Typography
+                    onClick={() => {
+                      navigate("/login");
+                    }}
+                  >
+                    Login
+                  </Typography>
+                )}
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

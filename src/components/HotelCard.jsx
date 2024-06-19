@@ -22,7 +22,7 @@ const HotelCard = ({hotel}) => {
         <CardActionArea>
           <CardMedia
             component="img"
-            height="200"
+            height="300"
             image={hotel.thumbnail}
             alt={hotel.name}
           />
@@ -34,7 +34,7 @@ const HotelCard = ({hotel}) => {
               {hotel.address}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {/* ₹ {hotel.pricePerNight * 70} / Night */}
+              ₹ {hotel.pricePerNight * 70} / Night
             </Typography>
             <Rating name="read-only" value={Math.floor(hotel.rating)} readOnly />
           </CardContent>

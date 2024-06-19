@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useLocation} from "react-router";
 
+import "../loader.css";
+
 import {Container, Grid, Typography} from "@mui/material";
 import axios from "axios";
 
@@ -8,6 +10,7 @@ import HotelCard from "../components/HotelCard";
 // import NavBar from "../components/NavBar";
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
   const [hotels, setHotels] = useState([]);
   const locationDetails = useLocation();
   // console.log(locationDetails);
@@ -18,6 +21,7 @@ const Home = () => {
       .then(response => {
         // console.log(response.data);
         setHotels(response.data);
+        setLoading(false);
       })
       .catch(err => {
         console.log(err);
@@ -33,7 +37,20 @@ const Home = () => {
           mt: "5rem",
         }}
       >
-        <Typography variant="h4">Welcome {locationDetails.state.userName}</Typography>
+        <Typography
+          variant="h4"
+          sx={{
+            textAlign: "center",
+            margin: "1rem",
+            fontStyle: "italic",
+            color: "#254336",
+          }}
+          component="h4"
+        >
+          {locationDetails?.state?.userName &&
+            `Welcome, ${locationDetails.state.userName}`}
+        </Typography>
+        {loading && <div className="loader"></div>}
         <Grid container spacing={3} justifyContent={"center"}>
           {hotels.map(hotel => {
             return (
